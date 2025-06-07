@@ -29,7 +29,7 @@
 
 @mixin e($element){
   @at-root{
-    #{&+$element-separator+$element}{
+    #{&+$element-sparator+$element}{
       @content;
     }
   }

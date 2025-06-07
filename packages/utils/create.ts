@@ -8,10 +8,10 @@ function createBem(prefixName: string) {
     return _bem(prefixName, blockSuffix, "", "");
   };
   const e = (element: string = "") => {
-    return element ? _bem(prefixName, element, "", "") : "";
+    return element ? _bem(prefixName, "", element, "") : "";
   };
   const m = (modifier: string = "") => {
-    return modifier ? _bem(prefixName, "", modifier, "") : "";
+    return modifier ? _bem(prefixName, modifier, "", "") : "";
   };
 
   const be = (blockSuffix: string, element: string) => {
@@ -54,6 +54,7 @@ function _bem(
   if (element) {
     prefixName += `__${element}`;
   }
+
   if (modifier) {
     prefixName += `--${modifier}`;
   }
