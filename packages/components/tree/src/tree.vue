@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { TreeNode, treeProps, TreeOptions } from "./tree";
+import { TreeNode, treeProps, TreeOptions, Key } from "./tree";
 import { createNamespace } from "@zi-shui/utils/create";
 import treeNodeElement from "./treeNode.vue";
 const bem = createNamespace("tree");
@@ -28,11 +28,11 @@ const { getKey, getLabel, getChildren } = createTreeOption(
   props.childrenFild
 );
 // 创建树结构的方法
-function createTree(data: TreeOptions[]) {
+function createTree(data: TreeOptions[], parent: TreeNode | null = null) {
   function traversal(data: TreeOptions[], parent: TreeNode | null = null) {
     return data.map((item) => {
       // 这里将 当前children获取到
-      let children = getChildren(item);
+      let children = getChildren(item) || [];
       const treeNode: TreeNode = {
         key: getKey(item),
         lable: getLabel(item),
@@ -49,7 +49,7 @@ function createTree(data: TreeOptions[]) {
       return treeNode;
     });
   }
-  const result: TreeNode[] = traversal(data);
+  const result: TreeNode[] = traversal(data, parent);
   return result;
 }
 
@@ -70,7 +70,6 @@ const expandedKeysSet = ref(new Set(props.defaultExpandedKeys));
 // 拍平树结构的计算属性
 const flatTree = computed(() => {
   const expandedKeys = expandedKeysSet.value;
-  console.log(expandedKeys);
   const flattenNodes: TreeNode[] = [];
   // 这里使用了树的深度遍历 拍平树结构
   function traversal(nodes: TreeNode[]) {
@@ -88,9 +87,32 @@ const flatTree = computed(() => {
   return flattenNodes;
 });
 
+// 加载中节点的集合
+const loadingKeysRef = ref(new Set<Key>());
+// 触发异步加载
+function triggerLoading(node: TreeNode) {
+  // 如果我当前节点没有孩子，并且她还是不是叶子节点 那么我就需要触发加载
+  if (!node.children?.length && !node.isLeaf) {
+    const loadingKeys = loadingKeysRef.value;
+    // 如果我当前节点不在加载中的集合中，那么我就需要触发加载
+    if (!loadingKeys.has(node.key!)) {
+      loadingKeys.add(node.key!);
+      const onLoad = props.onLoad;
+      // 如果我有加载方法，那么我就调用加载方法，并把当前节点加入到加载中的集合中
+      if (onLoad) {
+        onLoad(node.rawNode).then((res) => {
+          node.children = createTree(res, node);
+          loadingKeys.delete(node.key!);
+        });
+      }
+    }
+  }
+}
+
 // 展开
 function expand(node: TreeNode) {
   expandedKeysSet.value.add(node.key!);
+  triggerLoading(node);
 }
 // 折叠
 function collapse(node: TreeNode) {
@@ -116,6 +138,7 @@ defineOptions({ name: "z-tree" });
         :node="node"
         @toggle="toggle"
         :key="node.key"
+        :isLoding="loadingKeysRef"
         :expended="expandedKeysSet.has(node.key!)"></treeNodeElement>
     </TransitionGroup>
   </div>

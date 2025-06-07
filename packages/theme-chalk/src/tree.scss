@@ -28,5 +28,26 @@
       transform: rotate(90deg);
     }
   }
+  @include e("isLoding-icon"){
+    // 写一个旋转360度的动画 
+    // 动画固定为圆点 旋转360度 每2秒一次 无限循环
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid #f3f3f3;
+    border-bottom: 2px solid #3498db;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    vertical-align: middle;
+    animation: rotate 1s linear infinite;
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
 };
 
