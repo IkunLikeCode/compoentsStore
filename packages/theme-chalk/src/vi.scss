@@ -11,25 +11,25 @@
     width: 100%;
   }
 }
-// .treeList-enter-from {
-//   opacity: 0;
-//   transform: translateY(-5px);
-// }
-// .treeList-enter-to {
-//   opacity: 1;
-//   transform: translateY(0);
-// }
-// .treeList-enter-active {
-//   transition: all 0.3s ease;
-// }
-// .treeList-leave-from {
-//   opacity: 1;
-//   transform: translateY(0);
-// }
-// .treeList-leave-to {
-//   opacity: 0;
-//   transform: translateY(-5px);
-// }
-// .treeList-leave-active {
-//   transition: all 0.3s ease;
-// }
+.treeList-enter-from {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+.treeList-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.treeList-enter-active {
+  transition: all 0.1s ease;
+}
+.treeList-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.treeList-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+.treeList-leave-active {
+  transition: all 0.1s ease;
+}
