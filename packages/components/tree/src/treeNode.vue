@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { emitEvent, treeNodeProps } from "./tree";
+import { emitEvent, treeInjectKey, treeNodeProps } from "./tree";
 import { createNamespace } from "@zi-shui/utils/create";
 import Swithcher from "./icon/Swithcher.vue";
-import { computed } from "vue";
+import treeNodeContext from "./treeNodeContext";
+import { computed, inject, useSlots } from "vue";
 const bem = createNamespace("tree-node");
 
 const props = defineProps(treeNodeProps);
@@ -21,6 +22,8 @@ const onChoseHandle = () => {
 const isChose = computed(() => {
   return props.choseList.has(props.node.key!);
 });
+
+const treeContext = inject(treeInjectKey);
 </script>
 
 <template>
@@ -48,7 +51,11 @@ const isChose = computed(() => {
           </z-icon> -->
         </span>
       </template>
-      <span :class="bem.e('node-lable')">{{ node.lable }}</span>
+      <span :class="bem.e('node-lable')">
+        <treeNodeContext
+          :node="props.node"
+          :slot="treeContext?.slots!"></treeNodeContext>
+      </span>
     </div>
   </div>
 </template>

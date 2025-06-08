@@ -1,4 +1,9 @@
-import type { PropType, ExtractPropTypes } from "vue";
+import type {
+  PropType,
+  ExtractPropTypes,
+  SetupContext,
+  InjectionKey,
+} from "vue";
 export type Key = string | number;
 
 export interface TreeOptions {
@@ -77,6 +82,18 @@ export const treeNodeProps = {
     default: () => new Set<Key>(),
   },
 } as const;
+
+export const treeNodeContext = {
+  node: {
+    type: Object as PropType<TreeNode>,
+    required: true,
+  },
+  slot: {
+    type: Object as PropType<SetupContext["slots"]>,
+    required: true,
+  },
+} as const;
+
 // 定义treeNode组件的emit事件类型
 export const emitEvent = {
   toggle: (node: TreeNode) => node,
@@ -89,3 +106,9 @@ export type TreeNodeProps = Partial<ExtractPropTypes<typeof treeNodeProps>>;
 
 // ExtractPropTypes 这是vue中提供的类型提取工具函数，用于从组件的props定义中自动推导出类型信息。
 export type TreeProps = Partial<ExtractPropTypes<typeof treeProps>>;
+export type TreeNodeContext = Partial<ExtractPropTypes<typeof treeNodeContext>>;
+export interface TreeContext {
+  slots: SetupContext["slots"];
+}
+
+export const treeInjectKey: InjectionKey<TreeContext> = Symbol("tree");

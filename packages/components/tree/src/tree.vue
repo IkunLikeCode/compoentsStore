@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { TreeNode, treeProps, TreeOptions, Key, treeEvent } from "./tree";
+import { computed, provide, ref, useSlots, watch } from "vue";
+import {
+  TreeNode,
+  treeProps,
+  TreeOptions,
+  Key,
+  treeEvent,
+  treeInjectKey,
+} from "./tree";
 import { createNamespace } from "@zi-shui/utils/create";
 import treeNodeElement from "./treeNode.vue";
 const bem = createNamespace("tree");
@@ -161,6 +168,11 @@ function choseHandle(node: TreeNode) {
   }
   emit("update:selectedKeys", Array.from(chosenKeys));
 }
+
+// 提供插槽和树结构数据
+provide(treeInjectKey, {
+  slots: useSlots(),
+});
 defineOptions({ name: "z-tree" });
 </script>
 <template>
