@@ -141,6 +141,7 @@ watch(
   () => props.selectedKeys,
   (newValue) => {
     chosenKeysSet.value = new Set(newValue);
+    console.log(chosenKeysSet.value);
   },
   {
     immediate: true,
@@ -187,7 +188,8 @@ defineOptions({ name: "z-tree" });
           :isLoding="loadingKeysRef"
           @choseHandle="choseHandle"
           :choseList="chosenKeysSet"
-          :expended="expandedKeysSet.has(node.key!)"></treeNodeElement>
+          :expended="expandedKeysSet.has(node.key!)"
+          :showCheckbox="props.showCheckbox"></treeNodeElement>
       </template>
     </virtual>
   </div>

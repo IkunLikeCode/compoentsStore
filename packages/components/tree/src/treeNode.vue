@@ -3,7 +3,8 @@ import { emitEvent, treeInjectKey, treeNodeProps } from "./tree";
 import { createNamespace } from "@zi-shui/utils/create";
 import Swithcher from "./icon/Swithcher.vue";
 import treeNodeContext from "./treeNodeContext";
-import { computed, inject, useSlots } from "vue";
+import { computed, inject } from "vue";
+import Checkbox from "@zi-shui/components/checkbox/src/checkbox.vue";
 const bem = createNamespace("tree-node");
 
 const props = defineProps(treeNodeProps);
@@ -22,12 +23,14 @@ const onChoseHandle = () => {
 const isChose = computed(() => {
   return props.choseList.has(props.node.key!);
 });
-
+console.log(props.showCheckbox);
 const treeContext = inject(treeInjectKey);
 </script>
 
 <template>
-  <div :class="[bem.b(), bem.is('select', isChose)]" @click="onChoseHandle()">
+  <div
+    :class="[bem.b(), bem.is('select', isChose)]"
+    @click.stop="onChoseHandle()">
     <div
       :class="[bem.e('content')]"
       :style="{ paddingLeft: `${node.levle * 16}px` }">
@@ -45,13 +48,11 @@ const treeContext = inject(treeInjectKey);
         </span>
       </template>
       <template v-else>
-        <span :class="bem.e('isLoding-icon')">
-          <!-- <z-icon size="20">
-            <Loging></Loging>
-          </z-icon> -->
-        </span>
+        <span :class="bem.e('isLoding-icon')"> </span>
       </template>
+      <span v-if="props.showCheckbox"><Checkbox></Checkbox></span>
       <span :class="bem.e('node-lable')">
+        <!-- 自定义内容 单独抽离组件渲染 -->
         <treeNodeContext
           :node="props.node"
           :slot="treeContext?.slots!"></treeNodeContext>

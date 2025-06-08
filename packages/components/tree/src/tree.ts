@@ -61,6 +61,16 @@ export const treeProps = {
     type: Boolean,
     default: false,
   },
+  // 是否默认添加勾选框
+  defaultCheckedKeys: {
+    type: Array as PropType<Key[]>,
+    default: () => [],
+  },
+  // 是否显示勾选框
+  showCheckbox: {
+    type: Boolean,
+    default: false,
+  },
 } as const;
 
 // 定义treeNode组件的props类型
@@ -80,6 +90,15 @@ export const treeNodeProps = {
   choseList: {
     type: Object as PropType<Set<Key>>,
     default: () => new Set<Key>(),
+  },
+  // 是否显示勾选框
+  showCheckbox: {
+    type: Boolean,
+    default: false,
+  },
+  defaultCheckedKeys: {
+    type: Array as PropType<Key[]>,
+    default: () => [],
   },
 } as const;
 

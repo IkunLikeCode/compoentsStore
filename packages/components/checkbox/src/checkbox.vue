@@ -30,12 +30,12 @@ onMounted(() => {
 
 defineOptions({ name: "z-checkbox" });
 </script>
-
+<!-- input 之所以用点击 是因为要消除事件冒泡  -->
 <template>
   <label :class="bem.b()">
     <span :class="bem.e('input')">
       <input
-        @change="handleChange"
+        @click.stop="handleChange"
         ref="input"
         v-model="model"
         type="checkbox" />
