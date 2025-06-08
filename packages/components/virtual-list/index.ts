@@ -1,10 +1,10 @@
-import Virtual from "./src/virtual";
+import _Virtual from "./src/virtual";
 import withInstall from "@zi-shui/utils/withInstall";
-const Tree = withInstall(Virtual);
+const Virtual = withInstall(_Virtual);
 
-export default Tree;
+export default Virtual;
 declare module "vue" {
   export interface GlobalComponents {
-    "z-virtual-list": typeof Tree;
+    "z-virtual-list": typeof Virtual;
   }
 }

@@ -10,6 +10,7 @@ import {
 } from "./tree";
 import { createNamespace } from "@zi-shui/utils/create";
 import treeNodeElement from "./treeNode.vue";
+import virtual from "@zi-shui/components/virtual-list/index";
 const bem = createNamespace("tree");
 const props = defineProps(treeProps);
 // 存储格式化后的数据
@@ -177,41 +178,19 @@ defineOptions({ name: "z-tree" });
 </script>
 <template>
   <div :class="bem.b()">
-    <TransitionGroup name="treeList">
-      <treeNodeElement
-        v-for="node in flatTree"
-        :node="node"
-        @toggle="toggle"
-        :key="node.key"
-        :isLoding="loadingKeysRef"
-        @choseHandle="choseHandle"
-        :choseList="chosenKeysSet"
-        :expended="expandedKeysSet.has(node.key!)"></treeNodeElement>
-    </TransitionGroup>
+    <virtual :itemDatas="flatTree" :size="46" :remain="8">
+      <template #default="{ node }">
+        <treeNodeElement
+          :node="node"
+          @toggle="toggle"
+          :key="node.key"
+          :isLoding="loadingKeysRef"
+          @choseHandle="choseHandle"
+          :choseList="chosenKeysSet"
+          :expended="expandedKeysSet.has(node.key!)"></treeNodeElement>
+      </template>
+    </virtual>
   </div>
 </template>
 
-<style scoped>
-.treeList-enter-from {
-  opacity: 0;
-  transform: translateY(-5px);
-}
-.treeList-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-.treeList-enter-active {
-  transition: all 0.3s ease;
-}
-.treeList-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-.treeList-leave-to {
-  opacity: 0;
-  transform: translateY(-5px);
-}
-.treeList-leave-active {
-  transition: all 0.3s ease;
-}
-</style>
+<style scoped></style>

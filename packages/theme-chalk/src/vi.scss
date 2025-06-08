@@ -1,0 +1,35 @@
+@use "mixins/mixins.scss" as *;
+
+@include b(virtual-list){
+  overflow-y: scroll;
+  position: relative;
+  border: 2px solid red;
+  @include e("scroll-list"){
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
+// .treeList-enter-from {
+//   opacity: 0;
+//   transform: translateY(-5px);
+// }
+// .treeList-enter-to {
+//   opacity: 1;
+//   transform: translateY(0);
+// }
+// .treeList-enter-active {
+//   transition: all 0.3s ease;
+// }
+// .treeList-leave-from {
+//   opacity: 1;
+//   transform: translateY(0);
+// }
+// .treeList-leave-to {
+//   opacity: 0;
+//   transform: translateY(-5px);
+// }
+// .treeList-leave-active {
+//   transition: all 0.3s ease;
+// }
