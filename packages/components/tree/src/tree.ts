@@ -15,7 +15,7 @@ export interface TreeNode extends Readonly<TreeOptions> {
   children?: TreeNode[];
   isLeaf: boolean;
 }
-
+// 定义tree组件的props类型
 export const treeProps = {
   data: {
     type: Array as PropType<TreeOptions[]>,
@@ -41,8 +41,24 @@ export const treeProps = {
     type: Function as PropType<(node: TreeOptions) => Promise<TreeOptions[]>>,
     default: () => {},
   },
+  selectedKeys: {
+    //选中的节点
+    type: Array as PropType<Key[]>,
+    default: () => [],
+  },
+  select: {
+    //是否开启节点选择功能
+    type: Boolean,
+    default: false,
+  },
+  // 是否多选
+  multiple: {
+    type: Boolean,
+    default: false,
+  },
 } as const;
 
+// 定义treeNode组件的props类型
 export const treeNodeProps = {
   node: {
     type: Object as PropType<TreeNode>,
@@ -56,10 +72,18 @@ export const treeNodeProps = {
     type: Object as PropType<Set<Key>>,
     default: false,
   },
+  choseList: {
+    type: Object as PropType<Set<Key>>,
+    default: () => new Set<Key>(),
+  },
 } as const;
-
+// 定义treeNode组件的emit事件类型
 export const emitEvent = {
   toggle: (node: TreeNode) => node,
+  choseHandle: (node: TreeNode) => node,
+};
+export const treeEvent = {
+  "update:selectedKeys": (keys: Key[]) => keys,
 };
 export type TreeNodeProps = Partial<ExtractPropTypes<typeof treeNodeProps>>;
 

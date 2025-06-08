@@ -13,17 +13,25 @@ function toggle() {
 const isLoding = computed(() => {
   return props.isLoding.has(props.node.key!);
 });
+
+const onChoseHandle = () => {
+  emit("choseHandle", props.node);
+};
+// 是否选中节点 方便添加样式
+const isChose = computed(() => {
+  return props.choseList.has(props.node.key!);
+});
 </script>
 
 <template>
-  <div :class="bem.b()">
+  <div :class="[bem.b(), bem.is('select', isChose)]" @click="onChoseHandle()">
     <div
-      :class="bem.e('content')"
+      :class="[bem.e('content')]"
       :style="{ paddingLeft: `${node.levle * 16}px` }">
       <template v-if="!isLoding">
         <span
           v-if="!node.isLeaf"
-          @click="toggle"
+          @click.stop="toggle"
           :class="[
             bem.e('expand-icon'),
             { expanded: expended && !node.isLeaf },
@@ -40,7 +48,6 @@ const isLoding = computed(() => {
           </z-icon> -->
         </span>
       </template>
-
       <span :class="bem.e('node-lable')">{{ node.lable }}</span>
     </div>
   </div>

@@ -5,9 +5,11 @@
   display: inline-block;
   width: 100%;
 };
+
 @include b('tree-node'){
   padding: 7px 0;
   font-size: 16px;
+  margin: 10px 0;
   &:hover{
     background-color: rgb(236, 236, 240);
   }
@@ -48,6 +50,10 @@
         transform: rotate(360deg);
       }
     }
+  }
+  @include when("select"){
+    background-color: #d2e0ef;
+    cursor: pointer;
   }
 };
 

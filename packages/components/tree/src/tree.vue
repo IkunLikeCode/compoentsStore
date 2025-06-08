@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { TreeNode, treeProps, TreeOptions, Key } from "./tree";
+import { TreeNode, treeProps, TreeOptions, Key, treeEvent } from "./tree";
 import { createNamespace } from "@zi-shui/utils/create";
 import treeNodeElement from "./treeNode.vue";
 const bem = createNamespace("tree");
 const props = defineProps(treeProps);
 // 存储格式化后的数据
 const tree = ref<TreeNode[]>([]);
-
+const emit = defineEmits(treeEvent);
 // 定义树的结构名称
 function createTreeOption(key: string, lable: string, children: string) {
   return {
@@ -108,7 +108,6 @@ function triggerLoading(node: TreeNode) {
     }
   }
 }
-
 // 展开
 function expand(node: TreeNode) {
   expandedKeysSet.value.add(node.key!);
@@ -127,7 +126,41 @@ function toggle(node: TreeNode) {
     expand(node);
   }
 }
+const chosenKeysSet = ref(new Set<Key>());
 
+// 一上来就监听选择的key，如果有变化就更新集合
+watch(
+  () => props.selectedKeys,
+  (newValue) => {
+    chosenKeysSet.value = new Set(newValue);
+  },
+  {
+    immediate: true,
+  }
+);
+
+// 是否选中节点的集合
+function choseHandle(node: TreeNode) {
+  // 如果没有开启选择模式，则直接返回。
+  if (!props.select) return;
+  const chosenKeys = chosenKeysSet.value;
+  // 如果开启了多选模式，则需要进行额外的处理。
+  if (props.multiple) {
+    if (chosenKeys.has(node.key!)) {
+      chosenKeys.delete(node.key!);
+    } else {
+      chosenKeys.add(node.key!);
+    }
+  } else {
+    if (chosenKeys.has(node.key!)) {
+      chosenKeys.delete(node.key!);
+    } else {
+      chosenKeys.clear();
+      chosenKeys.add(node.key!);
+    }
+  }
+  emit("update:selectedKeys", Array.from(chosenKeys));
+}
 defineOptions({ name: "z-tree" });
 </script>
 <template>
@@ -139,6 +172,8 @@ defineOptions({ name: "z-tree" });
         @toggle="toggle"
         :key="node.key"
         :isLoding="loadingKeysRef"
+        @choseHandle="choseHandle"
+        :choseList="chosenKeysSet"
         :expended="expandedKeysSet.has(node.key!)"></treeNodeElement>
     </TransitionGroup>
   </div>
