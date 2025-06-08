@@ -40,13 +40,16 @@ export default defineComponent({
     const virtualList = computed(() => {
       return props.itemDatas.slice(initState.start, initState.end);
     });
+    // 偏移量
     const offset = ref(0);
+    // 滚动事件处理函数
     function handleScroll() {
       const { scrollTop } = NodeContainer.value!;
       initState.start = Math.floor(scrollTop / props.size); //划过去了多少个item
       initState.end = initState.start + props.remain; //划过去之后的下一个item的开始位置
       offset.value = initState.start * props.size; //偏移量
     }
+    // 监听数据变化，重新初始化列表的高度和滚轮的高度
     watch(
       () => props.itemDatas,
       () => init()
@@ -55,7 +58,7 @@ export default defineComponent({
       scrollBar.value!.style.height = `${
         props.itemDatas.length * props.size
       }px`;
-      NodeContainer.value!.style.height = `${props.remain * props.size}px`;
+      NodeContainer.value!.style.height = `${props.remain * props.size - 12}px`;
     }
     onMounted(() => {
       init();
