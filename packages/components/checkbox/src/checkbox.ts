@@ -6,6 +6,6 @@ export interface checkbox {
 }
 
 export const checkboxEmits = {
-  "update:checked": (value: boolean) => value,
-  change: (value: boolean) => value,
+  "update:checked": (value: boolean) => typeof value === "boolean",
+  change: (value: boolean) => typeof value === "boolean",
 };

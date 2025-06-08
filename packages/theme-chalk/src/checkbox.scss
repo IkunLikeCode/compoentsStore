@@ -1,0 +1,11 @@
+@use "mixins/mixins.scss" as *;
+
+@include b(checkbox){
+    @include e(input){
+        display:inline-block;
+        vertical-align: middle;
+    }
+    @include e(text){
+        font-size: 14px;
+    }
+}
