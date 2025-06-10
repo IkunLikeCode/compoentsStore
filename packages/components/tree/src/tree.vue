@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, provide, ref, useSlots, watch } from "vue";
+import { computed, onMounted, provide, ref, useSlots, watch } from "vue";
 import {
   TreeNode,
   treeProps,
@@ -48,6 +48,7 @@ function createTree(data: TreeOptions[], parent: TreeNode | null = null) {
         levle: parent ? parent.levle + 1 : 0,
         rawNode: item,
         isLeaf: item.isLeaf ?? children.length === 0,
+        prarent: parent,
       };
       // 如果当前节点有子节点，则递归赋值给children字段
       if (children.length > 0) {
@@ -141,7 +142,6 @@ watch(
   () => props.selectedKeys,
   (newValue) => {
     chosenKeysSet.value = new Set(newValue);
-    console.log(chosenKeysSet.value);
   },
   {
     immediate: true,
@@ -171,6 +171,80 @@ function choseHandle(node: TreeNode) {
   emit("update:selectedKeys", Array.from(chosenKeys));
 }
 
+// 判断是否有默认选中
+const isDefualtChecked = ref(new Set(props.defaultCheckedKeys));
+function isChecked(node: TreeNode) {
+  return isDefualtChecked.value.has(node.key!);
+}
+// 判断是否为半选状态
+const isIndeterminateKey = ref<Set<Key>>(new Set());
+function isIndeterminate(node: TreeNode) {
+  if (node) {
+    return isIndeterminateKey.value.has(node.key!);
+  }
+}
+
+function toggleCheckHandle(node: TreeNode, value: boolean) {
+  checkHandle(node, value);
+  checkParent(node);
+}
+
+// 自上而下的去找 如果父节点被选中了 那么子节点应该全部被选中 反之
+function checkHandle(node: TreeNode, value: boolean) {
+  const checkedKey = isDefualtChecked.value;
+  if (value) {
+    if (!node) return;
+    if (node.key !== undefined) {
+      isIndeterminateKey.value.delete(node.key);
+    }
+  }
+  checkedKey[value ? "add" : "delete"](node.key!);
+  const children = node.children;
+  if (children) {
+    children.forEach((item) => {
+      checkHandle(item, value);
+    });
+  }
+}
+// 自下而上的去找 一种是子节点全部被选中 那么父节点应该是全选, 第二种是子节点选中了但不是全选 那么父节点应该是半选状态
+function checkParent(node: TreeNode) {
+  let allChecked = true;
+  let someChecked = false;
+  const parent = node.prarent;
+  const indeterminateKey = isIndeterminateKey.value;
+  const checkedKey = isDefualtChecked.value;
+  if (parent) {
+    const children = parent.children;
+    children?.forEach((item) => {
+      // 如果有一个子节点没选中那么父节点就不是全选状态
+      if (!checkedKey.has(item.key!)) {
+        allChecked = false;
+        someChecked = true;
+      }
+    });
+    if (allChecked) {
+      indeterminateKey.delete(parent.key!);
+      checkedKey.add(parent.key!);
+    }
+    if (someChecked) {
+      indeterminateKey.add(parent.key!);
+      checkedKey.delete(parent.key!);
+    }
+    checkParent(parent);
+  }
+}
+
+// 找到某个节点
+function findNode(key: Key) {
+  return flatTree.value.find((item) => item.key === key);
+}
+
+onMounted(() => {
+  isDefualtChecked.value.forEach((item) => {
+    checkHandle(findNode(item)!, true);
+  });
+});
+
 // 提供插槽和树结构数据
 provide(treeInjectKey, {
   slots: useSlots(),
@@ -187,9 +261,12 @@ defineOptions({ name: "z-tree" });
           :key="node.key"
           :isLoding="loadingKeysRef"
           @choseHandle="choseHandle"
+          @checkHandle="toggleCheckHandle"
           :choseList="chosenKeysSet"
+          :checked="isChecked(node)"
+          :indeterminate="isIndeterminate(node)"
           :expended="expandedKeysSet.has(node.key!)"
-          :showCheckbox="props.showCheckbox"></treeNodeElement>
+          :showCheckbox="showCheckbox"></treeNodeElement>
       </template>
     </virtual>
   </div>

@@ -23,8 +23,11 @@ const onChoseHandle = () => {
 const isChose = computed(() => {
   return props.choseList.has(props.node.key!);
 });
-console.log(props.showCheckbox);
 const treeContext = inject(treeInjectKey);
+
+const handlerChange = (val: boolean) => {
+  emit("checkHandle", props.node, val);
+};
 </script>
 
 <template>
@@ -50,7 +53,13 @@ const treeContext = inject(treeInjectKey);
       <template v-else>
         <span :class="bem.e('isLoding-icon')"> </span>
       </template>
-      <span v-if="props.showCheckbox"><Checkbox></Checkbox></span>
+      <!-- 判断是否需要展示checkbox -->
+      <span v-if="props.showCheckbox"
+        ><Checkbox
+          :indeterminate="indeterminate"
+          :checked="checked"
+          @change="handlerChange"></Checkbox
+      ></span>
       <span :class="bem.e('node-lable')">
         <!-- 自定义内容 单独抽离组件渲染 -->
         <treeNodeContext

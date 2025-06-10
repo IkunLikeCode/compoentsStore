@@ -19,6 +19,7 @@ export interface TreeNode extends Readonly<TreeOptions> {
   rawNode: TreeOptions; //原始节点数据
   children?: TreeNode[];
   isLeaf: boolean;
+  prarent: TreeNode | null; //父节点
 }
 // 定义tree组件的props类型
 export const treeProps = {
@@ -96,9 +97,23 @@ export const treeNodeProps = {
     type: Boolean,
     default: false,
   },
+  // 是否默认勾选
   defaultCheckedKeys: {
     type: Array as PropType<Key[]>,
     default: () => [],
+  },
+  // 当前checkbox是否选中
+  checked: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  indeterminate: {
+    type: Boolean,
+    default: false,
   },
 } as const;
 
@@ -117,6 +132,7 @@ export const treeNodeContext = {
 export const emitEvent = {
   toggle: (node: TreeNode) => node,
   choseHandle: (node: TreeNode) => node,
+  checkHandle: (node: TreeNode, value: boolean) => [node, value],
 };
 export const treeEvent = {
   "update:selectedKeys": (keys: Key[]) => keys,
