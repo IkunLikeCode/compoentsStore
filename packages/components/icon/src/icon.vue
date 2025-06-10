@@ -19,5 +19,3 @@ const sytle = computed(() => {
 <template>
   <i :class="bem.b()" :style="sytle"> <slot></slot></i>
 </template>
-
-<style lang="less" scoped></style>

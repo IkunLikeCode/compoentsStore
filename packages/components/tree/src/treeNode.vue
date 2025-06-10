@@ -69,5 +69,3 @@ const handlerChange = (val: boolean) => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

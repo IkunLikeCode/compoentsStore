@@ -45,5 +45,3 @@ defineOptions({ name: "z-checkbox" });
     </span>
   </label>
 </template>
-
-<style lang="less" scoped></style>

@@ -234,7 +234,6 @@ function checkParent(node: TreeNode) {
   }
 }
 
-// 找到某个节点
 function findNode(key: Key) {
   return flatTree.value.find((item) => item.key === key);
 }
@@ -271,5 +270,3 @@ defineOptions({ name: "z-tree" });
     </virtual>
   </div>
 </template>
-
-<style scoped></style>
