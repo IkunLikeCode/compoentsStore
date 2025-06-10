@@ -1,0 +1,68 @@
+@use "mixins/mixins.scss" as *;
+@use "mixins/var.scss" as *;
+
+
+@include b(button){
+  display: inline-flex;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid $border;
+
+  &:hover{
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  @include m(small){
+    padding: 5px 10px;
+  }
+  @include m(medium){
+    padding: 10px 20px;
+  }
+  @include m(large){
+    padding: 15px 25px;
+  }
+
+  @include m("default"){
+    background-color: $default;
+    color: rgb(0, 0, 0);
+  }
+  @include m("primary"){
+    background-color: $primary;
+    color: white;
+  }
+  @include m("success"){
+    background-color: $success;
+    color: white;
+  }
+  @include m("warning"){
+    background-color: $warning;
+    color: white;
+  }
+  @include m("danger"){
+    background-color: $danger;
+    color: white;
+  }
+  @include m("info"){
+    background-color: $info;
+    color: white;
+  }
+  @include when(disabled){
+    cursor: not-allowed;
+  }
+  @include when(loading){
+    cursor: not-allowed;
+  }
+  @include when(round){
+    border-radius: 40px;
+  }
+
+  @include when(icon){
+   border-radius: 50%;
+   padding:10px;
+   box-sizing: border-box;
+  }
+}
