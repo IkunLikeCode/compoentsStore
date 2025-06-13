@@ -1,0 +1,77 @@
+@use "mixins/mixins.scss" as *;
+$prependBgColor: #f5f7fa;
+$appendTextColor:#a1a4aa;
+$boder:#dcdfe6;
+$foucsBorderColor:#409eff;
+@include b(input){
+  display: flex;
+  align-items: center;
+  height: 30px;
+  .z-input--label{
+    display: inline-flex;
+    align-items: center;
+    margin-right: 5px;
+  }
+  .z-input__wrapper{
+    position: relative;
+    height: inherit;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    .is-disabled{
+      cursor: not-allowed;
+    }
+
+    .z-input__inner{
+      display: inline-flex;
+      outline: none;
+      height: inherit;
+      box-sizing: border-box;
+      border: 1px solid $boder;
+      padding: 0 5px;
+      &:focus{
+        border-color: $foucsBorderColor;
+      }
+    }
+     span{
+        display: inline-flex;
+        align-items: center;
+        position: absolute;
+        cursor: pointer;
+      }
+      .left{
+        left: 5px;
+      }
+      .right{
+        right: 3px;
+      }
+  }
+  .z-input-group__prepend{
+    border: 1px solid $boder;
+    box-sizing: border-box;
+    border-right: none;
+    user-select: none;
+    height: inherit;
+    color: $appendTextColor;
+    background-color: $prependBgColor;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  .z-input-group__append{
+    box-sizing: border-box;
+    border: 1px solid $boder;
+    border-left: none;
+    height: inherit;
+    user-select: none;
+    color: $appendTextColor;
+    background-color: $prependBgColor;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+}

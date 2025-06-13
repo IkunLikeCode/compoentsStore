@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import { useAttrs, useSlots, useTemplateRef, shallowRef, computed } from "vue";
+import {
+  useAttrs,
+  useSlots,
+  useTemplateRef,
+  shallowRef,
+  computed,
+  inject,
+  watch,
+} from "vue";
 import { createNamespace } from "@zi-shui/utils/create";
 import { inputProps, inputEmits } from "./input";
 import CloseIcon from "./icon/CloseIcon.vue";
 import Eye from "./icon/Eye.vue";
 import EyeClose from "./icon/Eye-close.vue";
+import { injectKey, triggerEvent } from "../../form/src/formItem";
 const inputRef = useTemplateRef<HTMLInputElement>("inputRef");
 const bem = createNamespace("input");
 const isFocus = shallowRef(false);
@@ -12,6 +21,7 @@ const isShowEye = shallowRef(false);
 const props = defineProps(inputProps);
 const emit = defineEmits(inputEmits);
 let oldPassword = "";
+const injects = inject(injectKey);
 
 // 接收所有自定义属性
 const attr = useAttrs();
@@ -29,6 +39,7 @@ const inputHandle = (e: Event) => {
 const changeHandle = (e: Event) => {
   const target = e.target as HTMLInputElement;
   emit("change", target.value);
+  triggerEevnt("change");
 };
 // 注册focus事件
 const focusHandle = (e: FocusEvent) => {
@@ -45,7 +56,12 @@ const clearHandle = () => {
 };
 const blurHandle = (e: FocusEvent) => {
   emit("blur", e);
+  triggerEevnt("blur");
   if (inputRef.value) inputRef.value.blur();
+};
+
+const triggerEevnt = (trigger: triggerEvent) => {
+  injects?.validate(trigger);
 };
 
 const changeShowPassword = (eye: string) => {
@@ -65,6 +81,13 @@ const isPassword = computed(() => {
   }
   return false;
 });
+watch(
+  () => props.modelValue,
+  () => {
+    triggerEevnt("change");
+  }
+);
+
 defineOptions({
   name: "z-input",
   inheritAttrs: false,
@@ -84,7 +107,6 @@ defineOptions({
         <slot name="prefixIco"></slot>
       </span>
       <input
-        id="input"
         :type="isPassword ? (isShowEye ? 'text' : 'password') : type"
         :disabled="disabled"
         ref="inputRef"

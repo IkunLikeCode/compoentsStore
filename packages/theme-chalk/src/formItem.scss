@@ -1,0 +1,23 @@
+@use "mixins/mixins.scss" as *;
+$labelTextColor:#c0c4cc;
+$errorColor:#f56c6c;
+@include b('form-item'){
+  margin-bottom: 20px;
+  .z-form-item-container{
+    display: flex;
+    align-items: center;
+    .z-form-item-label{
+        margin-right: 5px;
+        display: flex;
+        color: $labelTextColor;
+      }
+    .z-form-item-content{
+      position: relative;
+      .z-form-item-error{
+        position: absolute;
+        color: $errorColor;
+        font-size: 10px;
+      }
+    }
+  }
+}
